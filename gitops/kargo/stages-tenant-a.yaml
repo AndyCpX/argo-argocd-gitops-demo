@@ -15,7 +15,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/your-org/env-service-gitops.git
+            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
             checkout:
               - branch: main
                 path: ./repo
@@ -51,7 +51,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/your-org/env-service-gitops.git
+            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
             checkout:
               - branch: main
                 path: ./repo
@@ -87,7 +87,7 @@ spec:
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/your-org/env-service-gitops.git
+            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
             checkout:
               - branch: main
                 path: ./repo
