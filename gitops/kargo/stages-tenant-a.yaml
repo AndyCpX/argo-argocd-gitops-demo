@@ -20,15 +20,16 @@ spec:
               - branch: main
                 path: ./repo
         - uses: kustomize-set-image
+          as: update-image
           config:
             path: ./repo/gitops/tenants/tenant-a/dev
             images:
               - image: docker.io/andycpx/kargodemo
+                useDigest: true
         - uses: git-commit
           config:
             path: ./repo
-            messageFromSteps:
-              - kustomize-set-image
+            message: "chore: update tenant-a-dev image to ${{ outputs['update-image'].commitMessage }}"
         - uses: git-push
           config:
             path: ./repo
@@ -56,15 +57,16 @@ spec:
               - branch: main
                 path: ./repo
         - uses: kustomize-set-image
+          as: update-image
           config:
             path: ./repo/gitops/tenants/tenant-a/staging
             images:
               - image: docker.io/andycpx/kargodemo
+                useDigest: true
         - uses: git-commit
           config:
             path: ./repo
-            messageFromSteps:
-              - kustomize-set-image
+            message: "chore: update tenant-a-staging image to ${{ outputs['update-image'].commitMessage }}"
         - uses: git-push
           config:
             path: ./repo
@@ -92,15 +94,16 @@ spec:
               - branch: main
                 path: ./repo
         - uses: kustomize-set-image
+          as: update-image
           config:
             path: ./repo/gitops/tenants/tenant-a/prod
             images:
               - image: docker.io/andycpx/kargodemo
+                useDigest: true
         - uses: git-commit
           config:
             path: ./repo
-            messageFromSteps:
-              - kustomize-set-image
+            message: "chore: update tenant-a-prod image to ${{ outputs['update-image'].commitMessage }}"
         - uses: git-push
           config:
             path: ./repo
