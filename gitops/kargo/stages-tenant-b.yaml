@@ -15,10 +15,12 @@ spec:
       vars:
         - name: imageRepo
           value: docker.io/andycpx/kargodemo
+        - name: gitRepo
+          value: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
+            repoURL: ${{ vars.gitRepo }}
             checkout:
               - branch: main
                 path: ./repo
@@ -55,10 +57,12 @@ spec:
       vars:
         - name: imageRepo
           value: docker.io/andycpx/kargodemo
+        - name: gitRepo
+          value: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
+            repoURL: ${{ vars.gitRepo }}
             checkout:
               - branch: main
                 path: ./repo
@@ -95,10 +99,12 @@ spec:
       vars:
         - name: imageRepo
           value: docker.io/andycpx/kargodemo
+        - name: gitRepo
+          value: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
       steps:
         - uses: git-clone
           config:
-            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
+            repoURL: ${{ vars.gitRepo }}
             checkout:
               - branch: main
                 path: ./repo
