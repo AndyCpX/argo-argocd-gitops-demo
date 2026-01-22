@@ -1,0 +1,106 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: tenant-a-dev
+  namespace: env-service
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: env-service-warehouse-dev
+      sources:
+        direct: true
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/your-org/env-service-gitops.git
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: kustomize-set-image
+          config:
+            path: ./repo/gitops/tenants/tenant-a/dev
+            images:
+              - image: docker.io/andycpx/kargodemo
+        - uses: git-commit
+          config:
+            path: ./repo
+            messageFromSteps:
+              - kustomize-set-image
+        - uses: git-push
+          config:
+            path: ./repo
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: tenant-a-staging
+  namespace: env-service
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: env-service-warehouse
+      sources:
+        stages:
+          - tenant-a-dev
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/your-org/env-service-gitops.git
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: kustomize-set-image
+          config:
+            path: ./repo/gitops/tenants/tenant-a/staging
+            images:
+              - image: docker.io/andycpx/kargodemo
+        - uses: git-commit
+          config:
+            path: ./repo
+            messageFromSteps:
+              - kustomize-set-image
+        - uses: git-push
+          config:
+            path: ./repo
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: tenant-a-prod
+  namespace: env-service
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: env-service-warehouse
+      sources:
+        stages:
+          - tenant-a-staging
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/your-org/env-service-gitops.git
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: kustomize-set-image
+          config:
+            path: ./repo/gitops/tenants/tenant-a/prod
+            images:
+              - image: docker.io/andycpx/kargodemo
+        - uses: git-commit
+          config:
+            path: ./repo
+            messageFromSteps:
+              - kustomize-set-image
+        - uses: git-push
+          config:
+            path: ./repo

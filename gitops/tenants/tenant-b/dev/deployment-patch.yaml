@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: env-service
+spec:
+  template:
+    spec:
+      containers:
+        - name: env-service
+          imagePullPolicy: Never

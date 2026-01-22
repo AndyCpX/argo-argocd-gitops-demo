@@ -1,0 +1,26 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: env-service
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: ProjectConfig
+metadata:
+  name: env-service
+  namespace: env-service
+spec:
+  promotionPolicies:
+    # Auto-promote to dev for all tenants
+    - stage: tenant-a-dev
+      autoPromotionEnabled: true
+    - stage: tenant-b-dev
+      autoPromotionEnabled: true
+    # Manual promotion required for staging and prod
+    - stage: tenant-a-staging
+      autoPromotionEnabled: false
+    - stage: tenant-b-staging
+      autoPromotionEnabled: false
+    - stage: tenant-a-prod
+      autoPromotionEnabled: false
+    - stage: tenant-b-prod
+      autoPromotionEnabled: false

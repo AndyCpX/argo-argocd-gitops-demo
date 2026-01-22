@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tenant-a-dev
+  labels:
+    app.kubernetes.io/name: env-service
+    tenant: tenant-a
+    environment: dev
