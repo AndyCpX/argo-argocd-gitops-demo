@@ -12,6 +12,9 @@ spec:
         direct: true
   promotionTemplate:
     spec:
+      vars:
+        - name: imageRepo
+          value: docker.io/andycpx/kargodemo
       steps:
         - uses: git-clone
           config:
@@ -24,12 +27,13 @@ spec:
           config:
             path: ./repo/gitops/tenants/tenant-b/dev
             images:
-              - image: docker.io/andycpx/kargodemo
-                useDigest: true
+              - image: ${{ vars.imageRepo }}
+                tag: ${{ imageFrom(vars.imageRepo).Tag }}
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore: update tenant-b-dev image to ${{ outputs['update-image'].commitMessage }}"
+            messageFromSteps:
+              - update-image
         - uses: git-push
           config:
             path: ./repo
@@ -49,6 +53,9 @@ spec:
           - tenant-b-dev
   promotionTemplate:
     spec:
+      vars:
+        - name: imageRepo
+          value: docker.io/andycpx/kargodemo
       steps:
         - uses: git-clone
           config:
@@ -61,12 +68,13 @@ spec:
           config:
             path: ./repo/gitops/tenants/tenant-b/staging
             images:
-              - image: docker.io/andycpx/kargodemo
-                useDigest: true
+              - image: ${{ vars.imageRepo }}
+                tag: ${{ imageFrom(vars.imageRepo).Tag }}
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore: update tenant-b-staging image to ${{ outputs['update-image'].commitMessage }}"
+            messageFromSteps:
+              - update-image
         - uses: git-push
           config:
             path: ./repo
@@ -86,6 +94,9 @@ spec:
           - tenant-b-staging
   promotionTemplate:
     spec:
+      vars:
+        - name: imageRepo
+          value: docker.io/andycpx/kargodemo
       steps:
         - uses: git-clone
           config:
@@ -98,12 +109,13 @@ spec:
           config:
             path: ./repo/gitops/tenants/tenant-b/prod
             images:
-              - image: docker.io/andycpx/kargodemo
-                useDigest: true
+              - image: ${{ vars.imageRepo }}
+                tag: ${{ imageFrom(vars.imageRepo).Tag }}
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore: update tenant-b-prod image to ${{ outputs['update-image'].commitMessage }}"
+            messageFromSteps:
+              - update-image
         - uses: git-push
           config:
             path: ./repo
