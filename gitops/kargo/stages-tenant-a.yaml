@@ -32,8 +32,7 @@ spec:
         - uses: git-commit
           config:
             path: ./repo
-            messageFromSteps:
-              - update-image
+            message: "chore(tenant-a-dev): update image to ${{ imageFrom(vars.imageRepo).Tag }}"
         - uses: git-push
           config:
             path: ./repo
@@ -73,8 +72,7 @@ spec:
         - uses: git-commit
           config:
             path: ./repo
-            messageFromSteps:
-              - update-image
+            message: "chore(tenant-a-staging): update image to ${{ imageFrom(vars.imageRepo).Tag }}"
         - uses: git-push
           config:
             path: ./repo
@@ -114,8 +112,7 @@ spec:
         - uses: git-commit
           config:
             path: ./repo
-            messageFromSteps:
-              - update-image
+            message: "chore(tenant-a-prod): update image to ${{ imageFrom(vars.imageRepo).Tag }}"
         - uses: git-push
           config:
             path: ./repo
