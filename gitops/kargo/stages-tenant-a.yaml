@@ -4,8 +4,12 @@ metadata:
   name: tenant-a-dev
   namespace: env-service
 spec:
-  subscriptions:
-    warehouse: env-service
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: env-service
+      sources:
+        direct: true
   promotionTemplate:
     spec:
       steps:
@@ -20,18 +24,14 @@ spec:
             path: ./repo/gitops/stages/dev
             images:
               - image: docker.io/andycpx/kargodemo
+                tag: ${{ imageFrom("docker.io/andycpx/kargodemo").Tag }}
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore(tenant-a-dev): update image to {{.Freight.Images[0].Tag}}"
+            message: "chore(tenant-a-dev): update image to ${{ imageFrom(\"docker.io/andycpx/kargodemo\").Tag }}"
         - uses: git-push
           config:
             path: ./repo
-        - uses: argocd-update
-          config:
-            apps:
-              - name: env-service-tenant-a-dev
-                namespace: argocd
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -39,9 +39,13 @@ metadata:
   name: tenant-a-staging
   namespace: env-service
 spec:
-  subscriptions:
-    upstreamStages:
-      - name: tenant-a-dev
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: env-service
+      sources:
+        stages:
+          - tenant-a-dev
   promotionTemplate:
     spec:
       steps:
@@ -56,19 +60,14 @@ spec:
             path: ./repo/gitops/stages/staging
             images:
               - image: docker.io/andycpx/kargodemo
-                useDigest: false
+                tag: ${{ imageFrom("docker.io/andycpx/kargodemo").Tag }}
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore(tenant-a-staging): promote image to {{.Freight.Images[0].Tag}}"
+            message: "chore(tenant-a-staging): promote image to ${{ imageFrom(\"docker.io/andycpx/kargodemo\").Tag }}"
         - uses: git-push
           config:
             path: ./repo
-        - uses: argocd-update
-          config:
-            apps:
-              - name: env-service-tenant-a-staging
-                namespace: argocd
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -76,9 +75,13 @@ metadata:
   name: tenant-a-prod
   namespace: env-service
 spec:
-  subscriptions:
-    upstreamStages:
-      - name: tenant-a-staging
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: env-service
+      sources:
+        stages:
+          - tenant-a-staging
   promotionTemplate:
     spec:
       steps:
@@ -93,16 +96,11 @@ spec:
             path: ./repo/gitops/stages/prod
             images:
               - image: docker.io/andycpx/kargodemo
-                useDigest: false
+                tag: ${{ imageFrom("docker.io/andycpx/kargodemo").Tag }}
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore(tenant-a-prod): promote image to {{.Freight.Images[0].Tag}}"
+            message: "chore(tenant-a-prod): promote image to ${{ imageFrom(\"docker.io/andycpx/kargodemo\").Tag }}"
         - uses: git-push
           config:
             path: ./repo
-        - uses: argocd-update
-          config:
-            apps:
-              - name: env-service-tenant-a-prod
-                namespace: argocd

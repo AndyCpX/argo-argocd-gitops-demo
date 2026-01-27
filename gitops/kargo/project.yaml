@@ -2,17 +2,3 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:
   name: env-service
-spec:
-  promotionPolicies:
-    - stage: tenant-a-dev
-      autoPromotionEnabled: true
-    - stage: tenant-a-staging
-      autoPromotionEnabled: false
-    - stage: tenant-a-prod
-      autoPromotionEnabled: false
-    - stage: tenant-b-dev
-      autoPromotionEnabled: true
-    - stage: tenant-b-staging
-      autoPromotionEnabled: false
-    - stage: tenant-b-prod
-      autoPromotionEnabled: false
