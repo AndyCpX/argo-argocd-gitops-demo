@@ -46,9 +46,15 @@ spec:
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 10
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           readinessProbe:
             httpGet:
               path: /health
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 5
+      volumes:
+        - name: tmp
+          emptyDir: {}
