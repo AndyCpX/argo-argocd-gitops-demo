@@ -4,19 +4,8 @@ kind: Kustomization
 namespace: tenant-b-prod
 
 resources:
-  - namespace.yaml
   - ../../../stages/prod
-
-labels:
-  - pairs:
-      tenant: tenant-b
-      environment: prod
-    includeSelectors: false
+  - namespace.yaml
 
 patches:
   - path: configmap-patch.yaml
-
-images:
-  - name: andycpx/kargodemo
-    newName: andycpx/kargodemo
-    newTag: v1.0.0

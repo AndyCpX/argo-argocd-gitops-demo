@@ -4,40 +4,34 @@ metadata:
   name: tenant-b-dev
   namespace: env-service
 spec:
-  requestedFreight:
-    - origin:
-        kind: Warehouse
-        name: env-service-warehouse-dev
-      sources:
-        direct: true
+  subscriptions:
+    warehouse: env-service
   promotionTemplate:
     spec:
-      vars:
-        - name: imageRepo
-          value: docker.io/andycpx/kargodemo
-        - name: gitRepo
-          value: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
       steps:
         - uses: git-clone
           config:
-            repoURL: ${{ vars.gitRepo }}
+            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
             checkout:
               - branch: main
                 path: ./repo
         - uses: kustomize-set-image
-          as: update-image
           config:
-            path: ./repo/gitops/tenants/tenant-b/dev
+            path: ./repo/gitops/stages/dev
             images:
-              - image: ${{ vars.imageRepo }}
-                tag: ${{ imageFrom(vars.imageRepo).Tag }}
+              - image: docker.io/andycpx/kargodemo
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore(tenant-b-dev): update image to ${{ imageFrom(vars.imageRepo).Tag }}"
+            message: "chore(tenant-b-dev): update image to {{.Freight.Images[0].Tag}}"
         - uses: git-push
           config:
             path: ./repo
+        - uses: argocd-update
+          config:
+            apps:
+              - name: env-service-tenant-b-dev
+                namespace: argocd
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -45,41 +39,36 @@ metadata:
   name: tenant-b-staging
   namespace: env-service
 spec:
-  requestedFreight:
-    - origin:
-        kind: Warehouse
-        name: env-service-warehouse
-      sources:
-        stages:
-          - tenant-b-dev
+  subscriptions:
+    upstreamStages:
+      - name: tenant-b-dev
   promotionTemplate:
     spec:
-      vars:
-        - name: imageRepo
-          value: docker.io/andycpx/kargodemo
-        - name: gitRepo
-          value: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
       steps:
         - uses: git-clone
           config:
-            repoURL: ${{ vars.gitRepo }}
+            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
             checkout:
               - branch: main
                 path: ./repo
         - uses: kustomize-set-image
-          as: update-image
           config:
-            path: ./repo/gitops/tenants/tenant-b/staging
+            path: ./repo/gitops/stages/staging
             images:
-              - image: ${{ vars.imageRepo }}
-                tag: ${{ imageFrom(vars.imageRepo).Tag }}
+              - image: docker.io/andycpx/kargodemo
+                useDigest: false
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore(tenant-b-staging): update image to ${{ imageFrom(vars.imageRepo).Tag }}"
+            message: "chore(tenant-b-staging): promote image to {{.Freight.Images[0].Tag}}"
         - uses: git-push
           config:
             path: ./repo
+        - uses: argocd-update
+          config:
+            apps:
+              - name: env-service-tenant-b-staging
+                namespace: argocd
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -87,38 +76,33 @@ metadata:
   name: tenant-b-prod
   namespace: env-service
 spec:
-  requestedFreight:
-    - origin:
-        kind: Warehouse
-        name: env-service-warehouse
-      sources:
-        stages:
-          - tenant-b-staging
+  subscriptions:
+    upstreamStages:
+      - name: tenant-b-staging
   promotionTemplate:
     spec:
-      vars:
-        - name: imageRepo
-          value: docker.io/andycpx/kargodemo
-        - name: gitRepo
-          value: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
       steps:
         - uses: git-clone
           config:
-            repoURL: ${{ vars.gitRepo }}
+            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
             checkout:
               - branch: main
                 path: ./repo
         - uses: kustomize-set-image
-          as: update-image
           config:
-            path: ./repo/gitops/tenants/tenant-b/prod
+            path: ./repo/gitops/stages/prod
             images:
-              - image: ${{ vars.imageRepo }}
-                tag: ${{ imageFrom(vars.imageRepo).Tag }}
+              - image: docker.io/andycpx/kargodemo
+                useDigest: false
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore(tenant-b-prod): update image to ${{ imageFrom(vars.imageRepo).Tag }}"
+            message: "chore(tenant-b-prod): promote image to {{.Freight.Images[0].Tag}}"
         - uses: git-push
           config:
             path: ./repo
+        - uses: argocd-update
+          config:
+            apps:
+              - name: env-service-tenant-b-prod
+                namespace: argocd

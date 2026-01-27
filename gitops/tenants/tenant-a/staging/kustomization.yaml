@@ -4,19 +4,8 @@ kind: Kustomization
 namespace: tenant-a-staging
 
 resources:
-  - namespace.yaml
   - ../../../stages/staging
-
-labels:
-  - pairs:
-      tenant: tenant-a
-      environment: staging
-    includeSelectors: false
+  - namespace.yaml
 
 patches:
   - path: configmap-patch.yaml
-
-images:
-  - name: andycpx/kargodemo
-    newName: andycpx/kargodemo
-    newTag: v1.0.0

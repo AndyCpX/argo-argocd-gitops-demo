@@ -1,29 +1,11 @@
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
-  name: env-service-warehouse
+  name: env-service
   namespace: env-service
 spec:
-  interval: 5m0s
   subscriptions:
-    # Track container images from registry
     - image:
         repoURL: docker.io/andycpx/kargodemo
-        imageSelectionStrategy: SemVer
-        constraint: ">=1.0.0"
+        semverConstraint: "*"
         discoveryLimit: 10
----
-apiVersion: kargo.akuity.io/v1alpha1
-kind: Warehouse
-metadata:
-  name: env-service-warehouse-dev
-  namespace: env-service
-spec:
-  interval: 5m0s
-  subscriptions:
-    # Track dev images using lexical sorting for dev tags
-    - image:
-        repoURL: docker.io/andycpx/kargodemo
-        imageSelectionStrategy: Lexical
-        allowTags: "^dev-.*$"
-        discoveryLimit: 5

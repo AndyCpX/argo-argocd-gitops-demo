@@ -5,10 +5,9 @@ resources:
   - ../../base
   - pdb.yaml
 
-labels:
-  - pairs:
-      environment: prod
-    includeSelectors: false
-
 patches:
   - path: deployment-patch.yaml
+
+images:
+  - name: docker.io/andycpx/kargodemo
+    newTag: v1.0.0

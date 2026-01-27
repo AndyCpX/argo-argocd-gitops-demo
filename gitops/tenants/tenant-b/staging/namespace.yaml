@@ -3,6 +3,5 @@ kind: Namespace
 metadata:
   name: tenant-b-staging
   labels:
-    app.kubernetes.io/name: env-service
     tenant: tenant-b
-    environment: staging
+    stage: staging
