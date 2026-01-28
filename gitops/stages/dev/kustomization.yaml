@@ -6,4 +6,4 @@ patches:
 - path: deployment-patch.yaml
 images:
 - name: docker.io/andycpx/kargodemo
-  newTag: v2.0.0
+  newTag: v1.0.0
