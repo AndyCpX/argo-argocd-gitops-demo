@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: env-service-config
-data:
-  STAGE: "staging"
-  TENANT: "tenant-a"

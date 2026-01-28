@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: tenant-a-staging
-  labels:
-    tenant: tenant-a
-    stage: staging
