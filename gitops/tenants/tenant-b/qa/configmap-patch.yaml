@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-service-config
+data:
+  STAGE: "qa"
+  TENANT: "tenant-b"

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tenant-a-qa
+  labels:
+    tenant: tenant-a
+    stage: qa

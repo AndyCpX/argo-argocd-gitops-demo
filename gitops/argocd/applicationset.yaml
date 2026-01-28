@@ -5,7 +5,6 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    # Dev environments - auto-sync enabled
     - matrix:
         generators:
           - list:
@@ -15,9 +14,12 @@ spec:
           - list:
               elements:
                 - stage: dev
+                - stage: qa
   template:
     metadata:
       name: "env-service-{{tenant}}-{{stage}}"
+      annotations:
+        kargo.akuity.io/authorized-stage: "env-service:{{tenant}}-{{stage}}"
       labels:
         app: env-service
         tenant: "{{tenant}}"
@@ -35,43 +37,5 @@ spec:
         automated:
           prune: true
           selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: env-service-manual
-  namespace: argocd
-spec:
-  generators:
-    # Staging and Prod environments - manual sync
-    - matrix:
-        generators:
-          - list:
-              elements:
-                - tenant: tenant-a
-                - tenant: tenant-b
-          - list:
-              elements:
-                - stage: staging
-                - stage: prod
-  template:
-    metadata:
-      name: "env-service-{{tenant}}-{{stage}}"
-      labels:
-        app: env-service
-        tenant: "{{tenant}}"
-        stage: "{{stage}}"
-    spec:
-      project: default
-      source:
-        repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
-        targetRevision: HEAD
-        path: "gitops/tenants/{{tenant}}/{{stage}}"
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: "{{tenant}}-{{stage}}"
-      syncPolicy:
         syncOptions:
           - CreateNamespace=true

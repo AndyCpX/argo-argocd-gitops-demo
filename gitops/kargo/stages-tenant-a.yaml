@@ -41,7 +41,7 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
-  name: tenant-a-staging
+  name: tenant-a-qa
   namespace: env-service
 spec:
   requestedFreight:
@@ -62,60 +62,19 @@ spec:
                 path: ./repo
         - uses: kustomize-set-image
           config:
-            path: ./repo/gitops/stages/staging
+            path: ./repo/gitops/stages/qa
             images:
               - image: docker.io/andycpx/kargodemo
                 tag: ${{ imageFrom("docker.io/andycpx/kargodemo").Tag }}
         - uses: git-commit
           config:
             path: ./repo
-            message: "chore(tenant-a-staging): promote image to ${{ imageFrom(\"docker.io/andycpx/kargodemo\").Tag }}"
+            message: "chore(tenant-a-qa): promote image to ${{ imageFrom(\"docker.io/andycpx/kargodemo\").Tag }}"
         - uses: git-push
           config:
             path: ./repo
         - uses: argocd-update
           config:
             apps:
-              - name: env-service-tenant-a-staging
-                namespace: argocd
----
-apiVersion: kargo.akuity.io/v1alpha1
-kind: Stage
-metadata:
-  name: tenant-a-prod
-  namespace: env-service
-spec:
-  requestedFreight:
-    - origin:
-        kind: Warehouse
-        name: env-service
-      sources:
-        stages:
-          - tenant-a-staging
-  promotionTemplate:
-    spec:
-      steps:
-        - uses: git-clone
-          config:
-            repoURL: https://github.com/AndyCpX/argo-argocd-gitops-demo.git
-            checkout:
-              - branch: main
-                path: ./repo
-        - uses: kustomize-set-image
-          config:
-            path: ./repo/gitops/stages/prod
-            images:
-              - image: docker.io/andycpx/kargodemo
-                tag: ${{ imageFrom("docker.io/andycpx/kargodemo").Tag }}
-        - uses: git-commit
-          config:
-            path: ./repo
-            message: "chore(tenant-a-prod): promote image to ${{ imageFrom(\"docker.io/andycpx/kargodemo\").Tag }}"
-        - uses: git-push
-          config:
-            path: ./repo
-        - uses: argocd-update
-          config:
-            apps:
-              - name: env-service-tenant-a-prod
+              - name: env-service-tenant-a-qa
                 namespace: argocd
